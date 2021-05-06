@@ -1,5 +1,7 @@
 package br.com.mai05.service.impl;
 
-public class ClienteServiceImpl {
+import br.com.mai05.service.ClienteService;
+
+public class ClienteServiceImpl implements ClienteService {
 
 }
