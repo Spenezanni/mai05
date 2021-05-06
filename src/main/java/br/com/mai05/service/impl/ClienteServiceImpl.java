@@ -1,5 +1,7 @@
 package br.com.mai05.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,12 @@ public class ClienteServiceImpl implements ClienteService {
 	public ClienteResponse cadastrarCliente(ClienteRequest clienteRequest) {
 		Cliente cliente = clienteRepository.save(clienteMapper.clienteRequestModel(clienteRequest));
 		return clienteMapper.clienteResponseModel(cliente);
+	}
+
+	@Override
+	public List<ClienteResponse> buscarListaClienteResponse() {
+		List<Cliente> listaCliente = clienteRepository.findAll();
+		return clienteMapper.listaResponseModel(listaCliente);
 	}
 
 }
