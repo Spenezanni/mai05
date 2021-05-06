@@ -18,7 +18,6 @@ public class ClienteServiceImpl implements ClienteService {
 	@Autowired
 	private ClienteRepository clienteRepository;
 	
-	@Autowired
 	private ClienteMapper clienteMapper;
 
 	@Override
