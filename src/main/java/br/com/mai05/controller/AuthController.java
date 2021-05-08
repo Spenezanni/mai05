@@ -1,6 +1,7 @@
 package br.com.mai05.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.mai05.dto.TokenDto;
-import br.com.mai05.form.UserForm;
+import br.com.mai05.form.LoginForm;
 import br.com.mai05.security.TokenService;
 
 @RestController
@@ -20,22 +21,22 @@ import br.com.mai05.security.TokenService;
 public class AuthController {
 	
 	@Autowired
-	private AuthenticationManager authManager;
+    private AuthenticationManager authManager;
 	
 	@Autowired
 	private TokenService tokenService; 
 	
 	@PostMapping
-	public ResponseEntity<TokenDto> autenticarUser(@RequestBody UserForm userForm){
-		UsernamePasswordAuthenticationToken dadosLogin = userForm.converter();
-		System.out.println(dadosLogin.getPrincipal());
+	public ResponseEntity<TokenDto> autenticarUser(@RequestBody LoginForm loginForm){
+		UsernamePasswordAuthenticationToken dadosLogin = loginForm.converter();
+		//System.out.println("get principal  " + dadosLogin.getPrincipal());
 		try {
 			Authentication authentication = authManager.authenticate(dadosLogin);
 			String token = tokenService.gerarToken(authentication);
-			System.out.println(token);
+			//System.out.println(token);
 			return ResponseEntity.ok(new TokenDto(token , "Bearer"));			
 		} catch (AuthenticationException e) {
-			return ResponseEntity.badRequest().build(); 
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); 
 		}
 	}	
 

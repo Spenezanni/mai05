@@ -2,7 +2,7 @@ package br.com.mai05.form;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
-public class UserForm {
+public class LoginForm {
 
 	private String login;
 	private String senha;

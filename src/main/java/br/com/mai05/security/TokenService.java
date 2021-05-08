@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import br.com.mai05.model.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -21,7 +22,6 @@ public class TokenService {
 	public String gerarToken(Authentication authentication) {
 		User userLogado = (User) authentication.getPrincipal();
 		System.out.println(userLogado.getUsername());
-		System.out.println("Passe aqui");
 		Date hoje = new Date();
 		Date dataExpiracao = new Date(hoje.getTime() + Long.parseLong(expiration));
 		
@@ -32,5 +32,20 @@ public class TokenService {
 				.setExpiration(dataExpiracao)
 				.signWith(SignatureAlgorithm.HS256, secret)
 				.compact();		
+	}
+
+	public boolean isTokenValido(String token) {
+		try {
+			Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token);			
+		} catch (Exception e) {
+			return false;
+		}
+		
+		return false;
+	}
+
+	public Long getIdUser(String token) {
+		Claims claims = Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token).getBody();
+		return Long.parseLong(claims.getSubject());
 	}
 }

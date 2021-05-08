@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import br.com.mai05.repository.UserRepository;
 
 @EnableWebSecurity
 @Configuration
@@ -19,12 +22,23 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
 	
+	@Autowired
+	private TokenService tokenService;
+	
+	@Autowired
+	private UserRepository userRepository;
+	 
 	@Override
 	@Bean
-	protected AuthenticationManager authenticationManager() throws Exception {
-		return super.authenticationManager();
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
 	}
-
+   
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(customUserDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+	}
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
@@ -32,15 +46,13 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 		.antMatchers("/auth").permitAll()
 		.antMatchers("**/clientes/**").permitAll()
 		.anyRequest().authenticated()
+		.and().formLogin()
 		.and().csrf().disable()
-		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and().addFilterBefore( new AuthenticatinTokenFilter(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class);
 				
 	}
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(customUserDetailsService).passwordEncoder(new BCryptPasswordEncoder());
-	}
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
