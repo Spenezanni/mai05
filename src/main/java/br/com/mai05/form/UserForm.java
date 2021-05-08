@@ -1,5 +1,7 @@
 package br.com.mai05.form;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 public class UserForm {
 
 	private String login;
@@ -19,6 +21,10 @@ public class UserForm {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+
+	public UsernamePasswordAuthenticationToken converter() {
+		return new UsernamePasswordAuthenticationToken(login, senha);
 	}
 
 }
