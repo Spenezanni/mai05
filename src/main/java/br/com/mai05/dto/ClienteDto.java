@@ -1,5 +1,9 @@
 package br.com.mai05.dto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import br.com.mai05.model.Cliente;
 import br.com.mai05.model.Endereco;
 
 public class ClienteDto {
@@ -10,6 +14,14 @@ public class ClienteDto {
 	private String cpf;
 
 	private Endereco endereco;
+
+	public ClienteDto(Cliente clienteSalvo) {
+		this.id = clienteSalvo.getId();
+		this.nome = clienteSalvo.getNome();
+		this.sobrenome = clienteSalvo.getSobrenome();
+		this.cpf = clienteSalvo.getCpf();
+		
+	}
 
 	public long getId() {
 		return id;
@@ -49,6 +61,10 @@ public class ClienteDto {
 
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
+	}
+	
+	public static List<ClienteDto> converter(List<Cliente> clientList){
+		return clientList.stream().map(ClienteDto::new).collect(Collectors.toList());
 	}
 
 }

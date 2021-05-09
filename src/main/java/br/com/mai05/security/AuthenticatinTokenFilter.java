@@ -35,6 +35,7 @@ public class AuthenticatinTokenFilter extends OncePerRequestFilter {
 		String token = recuperarToken(request); 
 		System.out.println(token);
 		boolean valido = tokenService.isTokenValido(token);
+		System.out.println("Boolean" + valido);
 		if(valido) {
 			autenticar(token);
 		}
@@ -45,14 +46,15 @@ public class AuthenticatinTokenFilter extends OncePerRequestFilter {
 
 	private void autenticar(String token) {
 		Long IdUser = tokenService.getIdUser(token);
-		User user = userRepository.findById(IdUser).get();
-		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+		Optional<User> user = userRepository.findById(IdUser);
+		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.get().getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
 
 	private String recuperarToken(HttpServletRequest request) {
 		String tokenHeader = request.getHeader("Authorization");
 		if(tokenHeader == null || tokenHeader.isEmpty() || !tokenHeader.startsWith("Bearer ")) {
+			System.out.println("Token Inválido");
 		return null;
 		}
 		return tokenHeader.substring(7, tokenHeader.length());

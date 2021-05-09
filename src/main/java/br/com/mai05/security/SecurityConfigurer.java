@@ -44,9 +44,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
 		http.authorizeRequests()
 		.antMatchers("/auth").permitAll()
-		.antMatchers("**/clientes/**").permitAll()
+		.antMatchers("/clientes/**").permitAll()
 		.anyRequest().authenticated()
-		.and().formLogin()
 		.and().csrf().disable()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and().addFilterBefore( new AuthenticatinTokenFilter(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class);

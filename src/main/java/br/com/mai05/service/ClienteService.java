@@ -2,13 +2,16 @@ package br.com.mai05.service;
 
 import java.util.List;
 
+import br.com.mai05.dto.ClienteDto;
+import br.com.mai05.model.Cliente;
 import br.com.mai05.response.ClienteResponse;
-import request.ClienteRequest;
 
 public interface ClienteService {
 
-	ClienteResponse cadastrarCliente(ClienteRequest clienteRequest);
+	ClienteDto cadastrarCliente(Cliente cliente);
 
-	List<ClienteResponse> buscarListaClienteResponse();
+	List<ClienteDto> buscarListaClienteDto();
+
+	void deleteCliente(Long id);
 
 }
